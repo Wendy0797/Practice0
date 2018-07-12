@@ -1,0 +1,97 @@
+/*individual Monthly prod by task 
+*
+* Main report to use, compare individuals performance throughout one month 
+*
+* 3 sheets- Picking, Scaning, Putaway
+* 
+* Change the date range accordingly
+*/
+
+
+SELECT  DISTINCT
+M.MOVTID "Task", 
+
+M.CRBY "UserID",
+
+COUNT(DISTINCT M.CRAT) "Working days",
+
+SUM (M.QTY) "Total Qty-ctn",
+
+SUM(M.gaps) "Total duration-ss",
+
+sum (case when (M.LOT LIKE 'C%' OR M.LOT LIKE 'N%') and M.QTY in (132,28,56) then 0 when (M.LOT NOT LIKE 'C%' and M.LOT not LIKE 'N%') and M.QTY in (48,60) then 0 else M.QTY end) /SUM(M.QTY) "Partial %"
+
+from( select A.MOVTID, A.CRAT, A.CRBY, ( case when datediff(ss,A.CRTIME,B.CRTIME) <601 then datediff(ss,A.CRTIME,B.CRTIME) else 0 end) as gaps, A.TRAVELER,A.QTY, A.LOT
+        from
+        ( select row_number() over ( order by c.MOVTID, c.CRAT, c.CRBY, c.CRTIME) as num, c.MOVTID, c.CRAT, c.CRBY, c.CRTIME,c.TRAVELER,C.QTY, c.LOT from MOVHIS c
+          where c.MOVTID ='PICKING' and c.CRAT between '2018-06-01' and '2018-06-30') as A 
+              left join
+         ( select row_number() over ( order by d.MOVTID, d.CRAT, d.CRBY, d.CRTIME) as num, d.MOVTID, d.CRAT, d.CRBY, d.CRTIME,d.TRAVELER,D.QTY from MOVHIS d
+           where d.MOVTID ='PICKING' and d.CRAT between '2018-06-01' and '2018-06-30') as B
+                 
+          on A.num = B.num-1 and A.CRBY=B.CRBY and A.CRAT=B.CRAT  and A.MOVTID=B.MOVTID 
+       
+     ) as M 
+
+group by M.MOVTID,M.CRBY
+order by M.MOVTID
+
+
+SELECT  DISTINCT
+M.MOVTID "Task", 
+
+M.CRBY "UserID",
+
+COUNT(DISTINCT M.CRAT) "Working days",
+
+SUM (M.QTY) "Total Qty-ctn",
+
+SUM(M.gaps) "Total duration-ss",
+
+sum (case when (M.LOT LIKE 'C%' OR M.LOT LIKE 'N%') and M.QTY in (132,28,56) then 0 when (M.LOT NOT LIKE 'C%' and M.LOT not LIKE 'N%') and M.QTY in (48,60) then 0 else M.QTY end) /SUM(M.QTY) "Partial %"
+
+from( select A.MOVTID, A.CRAT, A.CRBY, ( case when datediff(ss,A.CRTIME,B.CRTIME) <601 then datediff(ss,A.CRTIME,B.CRTIME) else 0 end) as gaps, A.TRAVELER,A.QTY, A.LOT
+        from
+        ( select row_number() over ( order by c.MOVTID, c.CRAT, c.CRBY, c.CRTIME) as num, c.MOVTID, c.CRAT, c.CRBY, c.CRTIME,c.TRAVELER,C.QTY, c.LOT from MOVHIS c
+          where c.MOVTID='TRAY_LABEL' and c.CRAT between '2018-06-01' and '2018-06-30') as A 
+              left join
+         ( select row_number() over ( order by d.MOVTID, d.CRAT, d.CRBY, d.CRTIME) as num, d.MOVTID, d.CRAT, d.CRBY, d.CRTIME,d.TRAVELER,D.QTY from MOVHIS d
+           where d.MOVTID ='TRAY_LABEL' and d.CRAT between '2018-06-01' and '2018-06-30') as B
+                 
+          on A.num = B.num-1 and A.CRBY=B.CRBY and A.CRAT=B.CRAT  and A.MOVTID=B.MOVTID 
+       
+     ) as M 
+
+group by M.MOVTID,M.CRBY
+order by M.MOVTID
+
+
+SELECT  DISTINCT
+M.MOVTID "Task", 
+
+M.CRBY "UserID",
+
+COUNT(DISTINCT M.CRAT) "Working days",
+
+SUM (M.QTY) "Total Qty-ctn",
+
+SUM(M.gaps) "Total duration-ss",
+
+sum (case when (M.LOT LIKE 'C%' OR M.LOT LIKE 'N%') and M.QTY in (132,28,56) then 0 when (M.LOT NOT LIKE 'C%' and M.LOT not LIKE 'N%') and M.QTY in (48,60) then 0 else M.QTY end) /SUM(M.QTY) "Partial %"
+
+from( select A.MOVTID, A.CRAT, A.CRBY, ( case when datediff(ss,A.CRTIME,B.CRTIME) <601 then datediff(ss,A.CRTIME,B.CRTIME) else 0 end) as gaps, A.TRAVELER,A.QTY, A.LOT
+        from
+        ( select row_number() over ( order by c.MOVTID, c.CRAT, c.CRBY, c.CRTIME) as num, c.MOVTID, c.CRAT, c.CRBY, c.CRTIME,c.TRAVELER,C.QTY, c.LOT from MOVHIS c
+          where c.MOVTID='RECV_PUTAWAY' and c.CRAT between '2018-06-01' and '2018-06-30') as A 
+              left join
+         ( select row_number() over ( order by d.MOVTID, d.CRAT, d.CRBY, d.CRTIME) as num, d.MOVTID, d.CRAT, d.CRBY, d.CRTIME,d.TRAVELER,D.QTY from MOVHIS d
+           where d.MOVTID ='RECV_PUTAWAY' and d.CRAT between '2018-06-01' and '2018-06-30') as B
+                 
+          on A.num = B.num-1 and A.CRBY=B.CRBY and A.CRAT=B.CRAT  and A.MOVTID=B.MOVTID 
+       
+     ) as M 
+
+group by M.MOVTID,M.CRBY
+order by M.MOVTID
+
+
