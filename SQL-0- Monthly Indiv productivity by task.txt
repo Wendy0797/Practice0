@@ -17,7 +17,7 @@ COUNT(DISTINCT M.CRAT) "Working days",
 
 SUM (M.QTY) "Total Qty-ctn",
 
-SUM(M.gaps) "Total duration-ss",
+SUM(M.gaps) "duration-ss",
 
 sum (case when (M.LOT LIKE 'C%' OR M.LOT LIKE 'N%') and M.QTY in (132,28,56) then 0 when (M.LOT NOT LIKE 'C%' and M.LOT not LIKE 'N%') and M.QTY in (48,60) then 0 else M.QTY end) /SUM(M.QTY) "Partial %"
 
@@ -33,7 +33,7 @@ from( select A.MOVTID, A.CRAT, A.CRBY, ( case when datediff(ss,A.CRTIME,B.CRTIME
        
      ) as M 
 
-group by M.MOVTID,M.CRBY
+group by M.MOVTID, M.CRBY
 order by M.MOVTID
 
 
@@ -62,7 +62,7 @@ from( select A.MOVTID, A.CRAT, A.CRBY, ( case when datediff(ss,A.CRTIME,B.CRTIME
        
      ) as M 
 
-group by M.MOVTID,M.CRBY
+group by M.MOVTID, M.CRBY
 order by M.MOVTID
 
 
@@ -91,7 +91,7 @@ from( select A.MOVTID, A.CRAT, A.CRBY, ( case when datediff(ss,A.CRTIME,B.CRTIME
        
      ) as M 
 
-group by M.MOVTID,M.CRBY
+group by M.MOVTID, M.CRBY
 order by M.MOVTID
 
 
